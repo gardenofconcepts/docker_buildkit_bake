@@ -1,0 +1,35 @@
+services:
+  dind:
+    build:
+      context: dind
+      dockerfile: Dockerfile
+      x-bake:
+        pull: true
+        ssh:
+          - default
+        platforms: linux/amd64
+        output: type=docker
+    working_dir: /app
+    volumes:
+      - ".:/app"
+      - "$SSH_AUTH_SOCK:/ssh-agent"
+      - "commandhistory:/commandhistory"
+    environment:
+      SSH_AUTH_SOCK: /ssh-agent
+    dns:
+      - 8.8.4.4
+    hostname: dind
+    network_mode: host
+    privileged: true
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "docker", "info"]
+      interval: 5s
+      start_period: 20s
+      retries: 10
+      timeout: 5s
+
+volumes:
+  commandhistory:
+    driver: local
