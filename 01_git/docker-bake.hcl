@@ -16,5 +16,5 @@ target "build" {
   tags       = [
     "${IMAGE_NAME}:${IMAGE_TAG}",
   ]
-  output = ["type=image"]
+  output = ["type=docker"]
 }
